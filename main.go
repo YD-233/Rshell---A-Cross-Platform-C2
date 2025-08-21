@@ -8,13 +8,14 @@ import (
 	"encoding/base64"
 	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"html/template"
 	"io/fs"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 //go:embed dist
@@ -22,7 +23,7 @@ var embedFS embed.FS
 
 func main() {
 	utils.InitFunction()
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	var bindPort = flag.Int("p", 8089, "Specify alternate port")
 	flag.Parse()
 	if *bindPort > 65535 || *bindPort < 0 {
@@ -38,6 +39,9 @@ func main() {
 	r := gin.New()
 	// 配置 CORS
 	r.Use(Cors())
+	// 配置日志
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 
 	// 创建嵌入文件系统
 	distFS, _ := fs.Sub(embedFS, "dist")

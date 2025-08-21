@@ -4,10 +4,11 @@ import (
 	"BackendTemplate/pkg/database"
 	"crypto/rand"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var JwtKey []byte
@@ -70,7 +71,6 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	// 假设用户名和密码验证成功
 	var users database.Users
 	if database.Engine.Where("username = ?", loginData.Username).Get(&users); users.Password == loginData.Password {
 		token, err := generateJWT(loginData.Username)
@@ -79,10 +79,9 @@ func LoginHandler(c *gin.Context) {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"code": 200, "data": gin.H{
-			"token":       token,
-			"permissions": 1, // 示例：1表示管理员权限
-			"refresh":     "mock-refresh-token",
-			"username":    loginData.Username,
+			"token":    token,
+			"refresh":  "mock-refresh-token",
+			"username": loginData.Username,
 		}})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})

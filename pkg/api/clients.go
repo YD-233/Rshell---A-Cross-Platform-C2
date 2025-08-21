@@ -7,7 +7,6 @@ import (
 	"BackendTemplate/pkg/utils"
 	"context"
 	"encoding/binary"
-	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -15,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetClients(c *gin.Context) {
@@ -127,11 +128,11 @@ func FileBrowse(c *gin.Context) {
 	if strings.HasSuffix(fileBody.DirPath, ":") {
 		fileBody.DirPath += "/"
 	}
-	//fmt.Println("dirPath:", fileBody.DirPath)
+
 	sendcommand.SendCommand(fileBody.Uid, "filebrowse "+fileBody.DirPath)
 
 	// 创建一个 context 并设置超时
-	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// 等待从通道接收 PID 列表
